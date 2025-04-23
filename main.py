@@ -4,61 +4,11 @@ from generator import TerrainGenerator
 from renderer import Renderer
 from player import Camera
 
-# Initialize pygame
 pygame.init()
-
-# Constants
 WIDTH, HEIGHT = 800, 600
 FPS = 100
 
-def run_game():
-    print("-"*80)
-    
-    size = 600
-    terrain_seed  = random.randint(1000, 9999)
-    variant_seed  = random.randint(1000, 9999)
-    moisture_seed = random.randint(1000, 9999)
-    biome_seed    = random.randint(1000, 9999)
-    
-    print(f"Seeds: terrain={terrain_seed}, variant={variant_seed}, "
-          f"moisture={moisture_seed}, biome={biome_seed}")
-    
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Funny game")
-    
-    terrain_generator = TerrainGenerator(
-        size=size, 
-        terrain_seed=terrain_seed,
-        terrain_variant_seed=variant_seed,
-        moisture_seed=moisture_seed,
-        biome_seed=biome_seed
-    )
-    
-    camera = Camera(
-        initial_x=size // 2,
-        initial_y=size // 2,
-        speed=0.3
-    )
-    
-    renderer = Renderer(
-        screen=screen, 
-        terrain_generator=terrain_generator,
-        camera=camera,
-        width=WIDTH,
-        height=HEIGHT
-    )
-    
-    clock = pygame.time.Clock()
-    running = True
-    while running:
-        running = handle_events(terrain_generator, camera, renderer)
 
-        renderer.draw_terrain()
-        renderer.display_debug_info(clock.get_fps())
-        
-        pygame.display.flip()
-        clock.tick(FPS)
-    pygame.quit()
 
 def handle_events(terrain_generator, camera, renderer):
     for event in pygame.event.get():
@@ -87,5 +37,46 @@ def handle_events(terrain_generator, camera, renderer):
     
     return True
 
-if __name__ == "__main__":
-    run_game()
+size=600
+terrain_seed  = random.randint(1000, 9999)
+variant_seed  = random.randint(1000, 9999)
+moisture_seed = random.randint(1000, 9999)
+biome_seed    = random.randint(1000, 9999)
+    
+print(f"Seeds: terrain={terrain_seed}, variant={variant_seed}, "
+    f"moisture={moisture_seed}, biome={biome_seed}")
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Funny game")
+
+terrain_generator = TerrainGenerator(
+    size=size, 
+    terrain_seed=terrain_seed,
+    terrain_variant_seed=variant_seed,
+    moisture_seed=moisture_seed,
+    biome_seed=biome_seed
+)
+
+camera = Camera(
+    initial_x=size // 2,
+    initial_y=size // 2,
+    speed=0.3
+)
+
+renderer = Renderer(
+    screen=screen, 
+    terrain_generator=terrain_generator,
+    camera=camera,
+    width=WIDTH,
+    height=HEIGHT
+)
+
+clock = pygame.time.Clock()
+while True:
+    running = handle_events(terrain_generator, camera, renderer)
+
+    renderer.draw_terrain()
+    renderer.display_debug_info(clock.get_fps())
+    pygame.display.flip()
+    clock.tick(FPS)
+pygame.quit()
